@@ -112,19 +112,24 @@ public class SensoManager : MonoBehaviour, IPlayBehaviour
     void LateUpdate()
     {
         //1. UPDATE PLATE STATE (including simulation with keys)
-        _plates = Hardware.Plates;
+        _plates = (Plate[])Hardware.Plates.Clone();
         
         Direction[] dirs = (Direction[])System.Enum.GetValues(typeof(Direction));
         foreach(Direction dir in dirs){
             KeyCode key = DirectionToKey(dir);
             if (Input.GetKeyDown(key)){
+                //Debug.Log("step " + dir);
                 _plates[(int)dir] = GetSimulatedPlate(dir, true, true);
+                
             }
             else if (Input.GetKeyUp(key)){
+                //Debug.Log("release " + dir);
                 _plates[(int)dir] = GetSimulatedPlate(dir, false, true);
+                
             }
             else if (Input.GetKey(key)){
-                _plates[(int)dir] = GetSimulatedPlate(dir, true, false);  
+                //Debug.Log("down " + dir); 
+                _plates[(int)dir] = GetSimulatedPlate(dir, true, false); 
             }
         }
 
@@ -135,7 +140,6 @@ public class SensoManager : MonoBehaviour, IPlayBehaviour
         {
             cog += _plates[i].f*(new Vector2(_plates[i].x, _plates[i].y));
             weight += _plates[i].f;
-            //Debug.Log("weight " + weight);
         }
         if (Mathf.Abs(weight) > 0.01f)
         {
@@ -242,8 +246,6 @@ public class SensoManager : MonoBehaviour, IPlayBehaviour
         sensoHardwareConfiguration.hardwarePlates[4].direction = Direction.Down;
         sensoHardwareConfiguration.hardwarePlates[4].upperLeftCorner = new Vector2(0f, 0f);
         sensoHardwareConfiguration.hardwarePlates[4].lowerRightCorner = new Vector2(1f, 3f);
-
-        
     }
     
     /**
@@ -284,36 +286,20 @@ public class SensoManager : MonoBehaviour, IPlayBehaviour
         }
     }
 
-    private static Plate GetSimulatedPlate(Direction direction, bool active, bool changedThisFrame){ 
+    private Plate GetSimulatedPlate(Direction direction, bool active, bool changedThisFrame){ 
         switch (direction)
         {
             case Direction.Up:
-                return new Plate(1.5f, 0.5f, active ? 0.25f : 0f, active, Time.frameCount);
+                return new Plate(1.5f, 0.5f, active ? 0.25f : 0f, active, changedThisFrame? Time.frameCount : _plates[(int)direction].changedAt);
             case Direction.Down:
-                return new Plate(1.5f, 2.5f, active ? 0.25f : 0f, active, Time.frameCount);
+                return new Plate(1.5f, 2.5f, active ? 0.25f : 0f, active, changedThisFrame? Time.frameCount : _plates[(int)direction].changedAt);
             case Direction.Left:
-                return new Plate(0.5f, 1.5f, active ? 0.25f : 0f, active, Time.frameCount);
+                return new Plate(0.5f, 1.5f, active ? 0.25f : 0f, active, changedThisFrame? Time.frameCount : _plates[(int)direction].changedAt);
             case Direction.Right:
-                return new Plate(2.5f, 1.5f, active ? 0.25f : 0f, active, Time.frameCount);
+                return new Plate(2.5f, 1.5f, active ? 0.25f : 0f, active, changedThisFrame? Time.frameCount : _plates[(int)direction].changedAt);
             case Direction.Center:
             default:
-                return new Plate(1.5f, 1.5f, active ? 0.25f : 0f, active, Time.frameCount);
+                return new Plate(1.5f, 1.5f, active ? 0.25f : 0f, active, changedThisFrame? Time.frameCount : _plates[(int)direction].changedAt);
         }
     }
-
-    // private void SimulateStep(Direction direction)
-    // {
-    //     SetSimulatedActiveState(direction, true);
-    // }
-
-    // private void SimulateRelease(Direction direction)
-    // {
-    //     SetSimulatedActiveState(direction, false);
-    // }
-
-    // private void SetSimulatedActiveState(Direction direction, bool active){
-    //     var dir = (int)direction;
-    //     _plates[dir].active = active;
-    //     _plates[dir].changedAt = Time.frameCount;
-    // }
 }

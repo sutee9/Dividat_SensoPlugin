@@ -29,6 +29,10 @@ namespace Dividat
             this.active = active;
             changedAt = changedFrame;
         }
+
+        public override string ToString(){
+            return "(" + x + ", " + y + ", f=" + f + "); " + (active? "active " : "inactive") + " since " + changedAt;
+        }
     }
 
     /// <summary>
@@ -111,51 +115,11 @@ namespace Dividat
             var dir = (int)direction;
             plates[dir].active = active;
             plates[dir].changedAt = Time.frameCount;
-            // switch (direction)
-            // {
-            //     case Direction.Center:
-            //         centerActive = active;
-            //         centerChangedAt = Time.frameCount;
-            //         break;
-            //     case Direction.Up:
-            //         upActive = active;
-            //         upChangedAt = Time.frameCount;
-            //         break;
-            //     case Direction.Right:
-            //         rightActive = active;
-            //         rightChangedAt = Time.frameCount;
-            //         break;
-            //     case Direction.Down:
-            //         downActive = active;
-            //         downChangedAt = Time.frameCount;
-            //         break;
-            //     case Direction.Left:
-            //         leftActive = active;
-            //         leftChangedAt = Time.frameCount;
-            //         break;
-            //     default:
-            //         break;
-            // }
         }
 
         private static bool GetActiveState(Direction direction)
         {
             return plates[(int)direction].active;
-            // switch (direction)
-            // {
-            //     case Direction.Center:
-            //         return centerActive;
-            //     case Direction.Up:
-            //         return upActive;
-            //     case Direction.Right:
-            //         return rightActive;
-            //     case Direction.Down:
-            //         return downActive;
-            //     case Direction.Left:
-            //         return leftActive;
-            //     default:
-            //         return false;
-            // }
         }
 
         private static int GetFrameCount(Direction direction)
