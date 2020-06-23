@@ -62,16 +62,12 @@ namespace Dividat
 
         public static bool GetStep(Direction direction)
         {
-            #if UNITY_WEBGL
             return (GetActiveState(direction) && GetFrameCount(direction) == Time.frameCount - 1);
-            #endif
         }
 
         public static bool GetRelease(Direction direction)
         {
-            #if UNITY_WEBGL
             return  (!GetActiveState(direction) && GetFrameCount(direction) == Time.frameCount - 1);
-            #endif
         }
 
         public static bool GetPlateActive(Direction direction)
