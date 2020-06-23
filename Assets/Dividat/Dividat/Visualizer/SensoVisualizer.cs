@@ -42,7 +42,7 @@ namespace Dividat.Visualizer {
             }
             _range_x = SensoManager.Instance.sensoHardwareConfiguration.Dimensions.x;
             _range_y = SensoManager.Instance.sensoHardwareConfiguration.Dimensions.y;
-            Debug.Log("rangex " +  _range_x + " rangey " + _range_y);
+            //Debug.Log("rangex " +  _range_x + " rangey " + _range_y);
         }
 
         // Update all Plates and the center of gravity

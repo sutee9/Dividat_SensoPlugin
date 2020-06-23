@@ -109,10 +109,11 @@ public class SensoManager : MonoBehaviour, IPlayBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void LateUpdate()
     {
-        //Update the plate state, including simulated key input
+        //1. UPDATE PLATE STATE (including simulation with keys)
         _plates = Hardware.Plates;
+        
         Direction[] dirs = (Direction[])System.Enum.GetValues(typeof(Direction));
         foreach(Direction dir in dirs){
             KeyCode key = DirectionToKey(dir);
@@ -121,11 +122,9 @@ public class SensoManager : MonoBehaviour, IPlayBehaviour
             }
             else if (Input.GetKeyUp(key)){
                 _plates[(int)dir] = GetSimulatedPlate(dir, false, true);
-                SimulateRelease(dir);
             }
             else if (Input.GetKey(key)){
-                _plates[(int)dir] = GetSimulatedPlate(dir, true, true);
-                SimulateStep(dir);
+                _plates[(int)dir] = GetSimulatedPlate(dir, true, false);  
             }
         }
 
@@ -251,13 +250,7 @@ public class SensoManager : MonoBehaviour, IPlayBehaviour
      * Get the plate state. This includes the state of simulated key input.
      */
     public Plate GetPlateState(Direction direction){
-        if (Input.GetKey(DirectionToKey(direction))) //keyboard input overrides senso input
-        {
-            return _plates[(int)direction];
-        }
-        else {
-            return Hardware.GetPlateState(direction);
-        }
+        return _plates[(int)direction];
     }
 
     public bool GetPlateActive(Direction direction)
@@ -265,6 +258,13 @@ public class SensoManager : MonoBehaviour, IPlayBehaviour
         return _plates[(int)direction].active;
     }
 
+    public bool GetStep(Direction dir){
+        return _plates[(int)dir].changedAt == Time.frameCount-1 && _plates[(int)dir].active;
+    }
+
+    public bool GetRelease(Direction dir){
+        return _plates[(int)dir].changedAt == Time.frameCount-1 && !_plates[(int)dir].active;
+    }
     private static KeyCode DirectionToKey(Direction direction)
     {
         switch (direction)
@@ -301,17 +301,19 @@ public class SensoManager : MonoBehaviour, IPlayBehaviour
         }
     }
 
-    private void SimulateStep(Direction direction)
-    {
-        SetSimulatedActiveState(direction, true);
-    }
+    // private void SimulateStep(Direction direction)
+    // {
+    //     SetSimulatedActiveState(direction, true);
+    // }
 
-    private void SimulateRelease(Direction direction)
-    {
-        SetSimulatedActiveState(direction, false);
-    }
+    // private void SimulateRelease(Direction direction)
+    // {
+    //     SetSimulatedActiveState(direction, false);
+    // }
 
-    private void SetSimulatedActiveState(Direction direction, bool active){
-
-    }
+    // private void SetSimulatedActiveState(Direction direction, bool active){
+    //     var dir = (int)direction;
+    //     _plates[dir].active = active;
+    //     _plates[dir].changedAt = Time.frameCount;
+    // }
 }

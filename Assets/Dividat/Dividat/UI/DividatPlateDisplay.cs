@@ -18,12 +18,12 @@ public class DividatPlateDisplay : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Plate p = Dividat.Hardware.GetPlateState(plate);
-        if (Dividat.Hardware.GetStep(plate))
+        Plate p = SensoManager.Instance.GetPlateState(plate);
+        if (SensoManager.Instance.GetStep(plate))
         {
             step = true;
         }
-        if (Dividat.Hardware.GetRelease(plate))
+        if (SensoManager.Instance.GetRelease(plate))
         {
             step = false;              
         }

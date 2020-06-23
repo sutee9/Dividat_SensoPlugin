@@ -193,9 +193,11 @@ namespace Dividat
         [DllImport("__Internal")]
         private static extern void SendMotorPreset(string keyword);
 
-        private static void SetPlateState(Direction direction, Plate state)
+        private static void SetPlateState(int direction, float x, float y, float f)
         {
-            plates[(int)direction] = state;
+            plates[direction].x = x;
+            plates[direction].y = y;
+            plates[direction].f = f;
         }
 
 
@@ -215,13 +217,9 @@ namespace Dividat
         [MonoPInvokeCallback(typeof(PlateCallback))]
         private static void OnSensoState(int direction, float x, float y, float f)
         {
-            SetPlateState((Direction)direction, new Plate(x, y, f));
+            SetPlateState(direction, x, y, f);
         }
-
-        
         #endif
         #endregion EGIBridge
-
-
     }
 }
