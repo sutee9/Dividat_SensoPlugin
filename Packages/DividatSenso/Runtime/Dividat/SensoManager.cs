@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using Dividat;
-using TMPro;
 using UnityEngine;
 
 ///<summary>Senso Manager summarizes all access to the Senso platform. You do not normally need to access
